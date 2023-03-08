@@ -6,30 +6,31 @@ public class Main {
             Scanner in = new Scanner(System.in);
             System.out.print("enter a line: ");
             String p = in.nextLine();
-            int q= p.length();
-            int i;
-            int count=0;
-            for( i=0; i<q; i++)
-            {
-                if( p.charAt(i)==' ')
-                {
-                    count++;
-                }
-            }
+
             String[] words = p.split(" ");
             HashMap<String,Integer> keyValue = new HashMap<>();
-            for (i = 0; i<= words.length-1; i++) {
-                if (keyValue.containsKey(words[i])) {
-                    int counter = keyValue.get(words[i]);
-                    keyValue.put(words[i], counter+1);
-                }
-                else {
-                    keyValue.put(words[i], 1);
-                }
+
+            for (String word : words) {
+                keyValue.put(word, keyValue.getOrDefault(word, 0) + 1);
             }
 
-            System.out.print("В тексте: " + count + " слов");
-            System.out.println("\nТоп-10 " + keyValue);
+            List<Map.Entry<String, Integer>> sortedList = new ArrayList<>(keyValue.entrySet());
+            sortedList.sort((o1, o2) -> {
+                int valueCompare = o2.getValue().compareTo(o1.getValue());
+                if (valueCompare == 0) {
+                    return o1.getKey().compareTo(o2.getKey());
+                } else {
+                    return valueCompare;
+                }
+            });
+
+            System.out.print("В тексте: " + words.length + " слов, уникальных слов: " + keyValue.size() + "\n");
+            System.out.println("Топ-10:");
+            for (int i=0; i<sortedList.size(); i++) {
+                if (i == 10) break;
+                System.out.println(sortedList.get(i).getValue() + " - " + sortedList.get(i).getKey());
+            }
+
             in.close();
         }
         }
